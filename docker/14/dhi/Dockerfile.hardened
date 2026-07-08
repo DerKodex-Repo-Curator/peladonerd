@@ -1,0 +1,4 @@
+FROM dhi.io/node:22-debian13
+WORKDIR /app
+COPY app.js .
+CMD ["node", "app.js"]

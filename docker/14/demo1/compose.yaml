@@ -1,0 +1,35 @@
+services:
+  demo:
+    image: curlimages/curl:8.10.1
+    command:
+      - sh
+      - -c
+      - |
+        echo "MODEL URL: $$AI_MODEL_URL"
+        echo "MODEL NAME: $$AI_MODEL_NAME"
+        MODEL_ENDPOINT="$${AI_MODEL_URL%/}/chat/completions"
+        echo "MODEL ENDPOINT: $$MODEL_ENDPOINT"
+        curl "$$MODEL_ENDPOINT" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "model": "'"$$AI_MODEL_NAME"'",
+            "messages": [
+              {
+                "role": "system",
+                "content": "Respondé corto y en español."
+              },
+              {
+                "role": "user",
+                "content": "Decime por qué tiene sentido declarar modelos en compose."
+              }
+            ]
+          }'
+    models:
+      llm:
+        endpoint_var: AI_MODEL_URL
+        model_var: AI_MODEL_NAME
+
+models:
+  llm:
+    model: ai/smollm2:360M-Q4_K_M
+    context_size: 1024
